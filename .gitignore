@@ -1,0 +1,17 @@
+# JetBrains IDE configuration files
+.idea/
+.iml
+
+# Python bytecode &amp; virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+
+# Terraform local state &amp; cached plugins
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
