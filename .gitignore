@@ -1,6 +1,6 @@
 # JetBrains IDE configuration files
 .idea/
-.iml
+*.iml
 
 # Python bytecode &amp; virtual environments
 __pycache__/
