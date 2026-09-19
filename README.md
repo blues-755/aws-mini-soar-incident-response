@@ -14,6 +14,10 @@ This repository implements a **serverless, event-driven mini-SOAR (Security Orch
    3. **Threat Intel Logging:** Logs the attacker IP into an encrypted Amazon S3 threat intelligence bucket (`blocked-ips.txt`).
    4. **Real-time Alerting:** Dispatches immediate alert payloads containing incident metadata and snapshot IDs to **Amazon SNS** and **Slack**.
 
+2. **Forensic Evidence Preservation:** Automatically triggers an **Amazon EBS Snapshot** across all attached volumes for forensic analysis prior to host tampering [2, 4].
+3. **Threat Intel Logging:** Logs the attacker IP into an encrypted Amazon S3 threat intelligence bucket (`blocked-ips.txt`) [2].
+4. **Real-time Alerting:** Dispatches immediate alert payloads containing incident metadata and snapshot IDs to **Amazon SNS** and **Slack** [2, 4].
+
 **Key Performance SLA:** Response and containment time is reduced from hours to **under 2 minutes** from initial detection.
 
 ---
