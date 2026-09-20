@@ -76,7 +76,8 @@ Deploy the serverless remediation function written in Python 3.11 using Boto3 [2
 
 Validate your automated incident response workflow using the AWS CLI:
 
-1. **Trigger Sample GuardDuty Findings:**
+  1. **Trigger Sample GuardDuty Findings:**
+
    ```bash
    aws guardduty create-sample-findings \
      --detector-id $(aws guardduty list-detectors --query 'DetectorIds[0]' --output text) \
