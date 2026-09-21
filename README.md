@@ -35,7 +35,7 @@ Below is the high-level event flow.
 Provision the IAM Execution Role named **`lambda_soar_execution_role`** to grant the remediation engine least-privilege permissions across EC2, S3, SNS, and CloudWatch Logs [2, 4].
 * **Resource Name:** `lambda_soar_execution_role`
   * **Key Actions Permitted:** `ec2:ModifyInstanceAttribute`, `ec2:CreateSnapshot`, `ec2:CreateNetworkAclEntry`, `s3:PutObject`, `sns:Publish`
-  * **Source Reference File:** [`terraform/iam_policies.tf`](./terraform/iam_policies.tf)
+  * **Source Reference File:** [`terraform/main.tf`](./terraform/iam_policies.tf)
 
 ---
 
@@ -55,7 +55,7 @@ Deploy an EventBridge rule that evaluates incoming GuardDuty finding payloads in
 * **Resource Name:** `GuardDuty-SOAR-Trigger`
   * **Filter Criteria:** `detail-type`: `"GuardDuty Finding"`, `severity`: `>= 4.0`, `resourceType`: `"Instance"`
   * **Target Finding Types:** `UnauthorizedAccess:EC2/SSHBruteForce`, `Trojan:EC2/BlackholeTraffic`, `Impact:EC2/DataExfiltration`
-  * **Source Reference File:** [`terraform/eventbridge.tf`](./terraform/eventbridge.tf)
+  * **Source Reference File:** [`terraform/main.tf`](./terraform/eventbridge.tf)
 
 ---
 
@@ -92,7 +92,7 @@ Validate your automated incident response workflow using the AWS CLI:
 
 ## 📜 References & AWS Documentation used to assist in building the project
 
-- [Amazon GuardDuty Finding Types & EventBridge Integration](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_findings_cloudwatch.html)
+  - [Amazon GuardDuty Finding Types & EventBridge Integration](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_findings_cloudwatch.html)
   - [AWS Solutions: Automated Security Response on AWS Guide](https://aws.amazon.com/solutions/implementations/automated-security-response-on-aws/)
   - [Amazon EventBridge Event Patterns & Rule Filtering](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-event-patterns.html)
   - [AWS Lambda Developer Guide & Boto3 EC2 Automation](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html)

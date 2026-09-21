@@ -47,13 +47,13 @@ resource "aws_security_group" "quarantine_sg" {
 }
 
 #Encrypted S3 Threat Intelligence Bucket.
-resource "aws_s3_bucket" "threat-intel" {
-  bucket        = "${var.project_prefix}-threat-intel-${random_string.suffix.result}"
+resource "aws_s3_bucket" "threat_intel" {
+  bucket        = "${var.project_prefix}-threat_intel-${random_string.suffix.result}"
   force_destroy = var.environment == "dev" ? true : false
 }
 
-resource "aws_s3_bucket_server_side_encryption_configuration" "threat-intel_crypto" {
-  bucket = aws_s3_bucket.threat-intel.bucket
+resource "aws_s3_bucket_server_side_encryption_configuration" "threat_intel_crypto" {
+  bucket = aws_s3_bucket.threat_intel.bucket
 
   rule {
     apply_server_side_encryption_by_default {
@@ -62,8 +62,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "threat-intel_cryp
   }
 }
 
-resource "aws_s3_bucket_public_access_block" "threat-intel_pab" {
-  bucket = aws_s3_bucket.threat-intel.id
+resource "aws_s3_bucket_public_access_block" "threat_intel_pab" {
+  bucket = aws_s3_bucket.threat_intel.id
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
@@ -71,13 +71,13 @@ resource "aws_s3_bucket_public_access_block" "threat-intel_pab" {
 }
 
 #Amazon SNS Topic for SOC Notifications
-resource "aws_sns_topic" "soar-alerts" {
+resource "aws_sns_topic" "soar_alerts" {
   name = "${var.project_prefix}-alerts-${random_string.suffix.result}"
 }
 
 resource "aws_sns_topic_subscription" "email_subscription" {
   count = var.alert_email != null ? 1 : 0
-  topic_arn = aws_sns_topic.soar-alerts.arn
+  topic_arn = aws_sns_topic.soar_alerts.arn
   protocol  = "email"
   endpoint = var.alert_email
 }
@@ -123,13 +123,13 @@ resource "aws_iam_policy" "lambda_soar_policy" {
         "s3:PutObject",
         "s3:GetObject",
         ]
-        Resource = "${aws_s3_bucket.threat-intel.arn}/*"
+        Resource = "${aws_s3_bucket.threat_intel.arn}/*"
       },
       {
         Sid = "SNSPublishAlerts"
         Effect = "Allow"
         Action = "sns:Publish"
-        Resource = aws_sns_topic.soar-alerts.arn
+        Resource = aws_sns_topic.soar_alerts.arn
       },
       {
         Sid = "CloudWatchLogs"
@@ -170,8 +170,8 @@ resource "aws_lambda_function" "soar_remediator" {
   environment {
     variables = {
       ISOLATION_SG_ID = aws_security_group.quarantine_sg.id
-      S3_THREAT_INTEL_BUCKET = aws_s3_bucket.threat-intel.bucket
-      SNS_TOPIC_ARN    = aws_sns_topic.soar-alerts.arn
+      S3_THREAT_INTEL_BUCKET = aws_s3_bucket.threat_intel.bucket
+      SNS_TOPIC_ARN    = aws_sns_topic.soar_alerts.arn
       SLACK_WEBHOOK_URL = var.slack_webhook_url
     }
   }
