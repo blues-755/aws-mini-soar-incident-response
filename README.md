@@ -3,7 +3,6 @@
 [![AWS Security](https://img.shields.io/badge/AWS-Security%20Specialty-orange.svg)](https://aws.amazon.com/certification/certified-security-specialty/)
 [![Terraform](https://img.shields.io/badge/IaC-Terraform-blue.svg)](https://www.terraform.io/)
 [![Python](https://img.shields.io/badge/Serverless-Python%203.11-green.svg)](https://www.python.org/)
-[![wakatime](https://wakatime.com/badge/user/91235d80-04e0-442f-a42a-e8adb447a9bc.svg)](https://wakatime.com/@91235d80-04e0-442f-a42a-e8adb447a9bc)
 
 ## 📌 Executive Summary & Threat Model
 In cloud operations, manual threat triage and containment can take hours, allowing attackers to exfiltrate data, perform SSH brute-force attacks, or run cryptocurrency miners. 
