@@ -35,7 +35,7 @@ Below is the high-level event flow.
 Provision the IAM Execution Role named **`lambda_soar_execution_role`** to grant the remediation engine least-privilege permissions across EC2, S3, SNS, and CloudWatch Logs [2, 4].
 * **Resource Name:** `lambda_soar_execution_role`
   * **Key Actions Permitted:** `ec2:ModifyInstanceAttribute`, `ec2:CreateSnapshot`, `ec2:CreateNetworkAclEntry`, `s3:PutObject`, `sns:Publish`
-  * **Source Reference File:** [`/terraform/main.tf`](./terraform/iam_policies.tf)
+  * **Source Reference File:** [`terraform/main.tf`](./terraform/main.tf)
 
 ---
 
@@ -55,7 +55,7 @@ Deploy an EventBridge rule that evaluates incoming GuardDuty finding payloads in
 * **Resource Name:** `GuardDuty-SOAR-Trigger`
   * **Filter Criteria:** `detail-type`: `"GuardDuty Finding"`, `severity`: `>= 4.0`, `resourceType`: `"Instance"`
   * **Target Finding Types:** `UnauthorizedAccess:EC2/SSHBruteForce`, `Trojan:EC2/BlackholeTraffic`, `Impact:EC2/DataExfiltration`
-  * **Source Reference File:** [`/terraform/main.tf`](./terraform/eventbridge.tf)
+  * **Source Reference File:** [`terraform/main.tf`](./terraform/main.tf)
 
 ---
 
