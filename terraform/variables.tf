@@ -1,6 +1,6 @@
 variable "aws_region" {
   type  = string
-  default = "us-east-1"
+  default = "af-south-1"
   description = "AWS region for the infrastructure deployment"
 }
 

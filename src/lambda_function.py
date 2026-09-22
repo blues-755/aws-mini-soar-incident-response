@@ -71,39 +71,39 @@ def lambda_handler(event, context):
                 snapshot_ids = create_volume_snapshots(instance_id, title, finding_id)
                 if snapshot_ids:
                     actions_taken.append(f"Created forensic EBS Snapshots: {', '.join(snapshot_ids)}")
-                else:
-                    logger.info(f"Finding severity ({severity}) does not warrant automatic isolation. Logging finding only.")
-                    actions_taken.append("Severity threshold not met for host isolation: alert dispatched")
             else:
-                logger.info("No target EC2 Instance ID found in finding detail.")
+                logger.info(f"Finding severity ({severity}) does not warrant automatic isolation. Logging finding only.")
+                actions_taken.append("Severity threshold not met for host isolation: alert dispatched")
+        else:
+            logger.info("No target EC2 Instance ID found in finding detail.")
 
-                # 2. Append Attacker IP to S3 Threat Intelligence List
-                if attacker_ip and S3_BUCKET:
-                    if append_ip_to_s3(attacker_ip, finding_type):
-                        actions_taken.append(f"Logged attacker IP ({attacker_ip}) to S3 Threat Intel Bucket")
+    # 2. Append Attacker IP to S3 Threat Intelligence List
+    if attacker_ip and S3_BUCKET:
+        if append_ip_to_s3(attacker_ip, finding_type):
+            actions_taken.append(f"Logged attacker IP ({attacker_ip}) to S3 Threat Intel Bucket")
 
-                    # 3. Construct and Dispatch Alerts
-                    alert_payload = build_alert_message(
-                        title=title,
-                        finding_type=finding_type,
-                        severity=severity,
-                        finding_id=finding_id,
-                        instance_id=instance_id,
-                        attacker_ip=attacker_ip,
-                        actions_taken=actions_taken,
-                        snapshot_ids=snapshot_ids
-                    )
+    # 3. Construct and Dispatch Alerts
+    alert_payload = build_alert_message(
+        title=title,
+        finding_type=finding_type,
+        severity=severity,
+        finding_id=finding_id,
+        instance_id=instance_id,
+        attacker_ip=attacker_ip,
+        actions_taken=actions_taken,
+        snapshot_ids=snapshot_ids
+    )
 
-                    dispatch_notifications(alert_payload, title)
+    dispatch_notifications(alert_payload, title)
 
-                    return {
-                        'statusCode': 200,
-                        'body': json.dumps({
-                            'message': 'Incident response automation executed successfully',
-                            'instance_id': instance_id,
-                            'actions_taken': actions_taken
-                        })
-                    }
+    return {
+        'statusCode': 200,
+        'body': json.dumps({
+            'message': 'Incident response automation executed successfully',
+            'instance_id': instance_id,
+            'actions_taken': actions_taken
+        })
+    }
 
 def extract_instance_id(detail):
     """Extracts target EC2 Instance ID from GuardDuty resource details."""

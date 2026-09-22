@@ -4,7 +4,7 @@ output "quarantine_security_group_id" {
 }
 
 output "threat_intel_bucket_name" {
-  value       = aws_s3_bucket.threat-intel.id
+  value       = aws_s3_bucket.threat_intel.id
   description = "The S3 bucket storing blocked attacker IP lists"
 }
 
