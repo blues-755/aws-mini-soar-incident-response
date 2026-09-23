@@ -27,7 +27,7 @@ provider "aws" {
   }
 }
 
-#Random suffix for unique naming
+#Random suffix for unique naming.
 resource "random_string" "suffix" {
   length  = 6
   special = false
@@ -48,7 +48,7 @@ resource "aws_security_group" "quarantine_sg" {
 
 #Encrypted S3 Threat Intelligence Bucket.
 resource "aws_s3_bucket" "threat_intel" {
-  bucket        = "${var.project_prefix}-threat_intel-${random_string.suffix.result}"
+  bucket        = "${var.project_prefix}-threat-intel-${random_string.suffix.result}"
   force_destroy = var.environment == "dev" ? true : false
 }
 
@@ -153,7 +153,7 @@ resource "aws_iam_role_policy_attachment" "lambda_soar_policy_attach" {
 #Zip packaging and Lambda Function Deployment
 data "archive_file" "lambda_function" {
   type        = "zip"
-  source_dir  = "${path.module}/../src/lambda_function.py"
+  source_file  = "${path.module}/../src/lambda_function.py"
   output_path = "${path.module}/../src/lambda_function.zip"
 }
 
