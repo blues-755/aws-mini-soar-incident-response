@@ -23,7 +23,6 @@ except ImportError:
     sys.modules['botocore.exceptions'] = Mock()
     import lambda_function
 
-
 class TestMiniSoarLambda(unittest.TestCase):
 
     def setUp(self):
