@@ -27,7 +27,7 @@ Below is the high-level event flow.
 
 ---
 
-## Step-by-Step Implementation Guide
+## Test it locally using this Step-by-Step Implementation Guide
 
 ### Prerequisites & IAM Execution Role
 Provision the IAM Execution Role named **`lambda_soar_execution_role`** to grant the remediation engine least-privilege permissions across EC2, S3, SNS, and CloudWatch Logs.
