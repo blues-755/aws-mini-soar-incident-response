@@ -56,7 +56,7 @@ Create a dedicated zero-ingress, zero-egress Security Group to immediately isola
 **CLI Command Brief**
 
 ```bash
-    aws ec2 create-security-group --group-name "Quarantine-SG" --description "Zero-traffic isolation SG" --vpc-id "vpc-xxxxxxxx"
+aws ec2 create-security-group --group-name "Quarantine-SG" --description "Zero-traffic isolation SG" --vpc-id "vpc-xxxxxxxx"
 ```
 **Configuration:** Remove all inbound and outbound default rules so all network traffic is dropped.
 
