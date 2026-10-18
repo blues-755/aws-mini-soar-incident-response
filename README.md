@@ -31,47 +31,75 @@ Below is the high-level event flow.
 
 ### Prerequisites & IAM Execution Role
 Provision the IAM Execution Role named **`lambda_soar_execution_role`** to grant the remediation engine least-privilege permissions across EC2, S3, SNS, and CloudWatch Logs.
-* **Resource Name:** `lambda_soar_execution_role`
-  * **Key Actions Permitted:** 
-  `ec2:ModifyInstanceAttribute`, 
-  `ec2:CreateSnapshot`, 
-  `ec2:CreateNetworkAclEntry`, 
-  `s3:PutObject`, 
-  `sns:Publish`
-  * **Source Reference File:** [`terraform/main.tf`](./terraform/main.tf)
+
+**Resource Name:** 
+
+`lambda_soar_execution_role`
+
+**Key Actions Permitted:** 
+  1. `ec2:ModifyInstanceAttribute`, 
+  2. `ec2:CreateSnapshot`, 
+  3. `ec2:CreateNetworkAclEntry`, 
+  4. `s3:PutObject`, 
+  5. `sns:Publish`
+
+**Source Reference File:** [`terraform/main.tf`](./terraform/main.tf)
 
 ---
 
 ### Step 1: Provision the Quarantine Security Group
 Create a dedicated zero-ingress, zero-egress Security Group to immediately isolate compromised hosts.
-* **Resource Name:** `Quarantine-SG`
-  * **CLI Command Brief:**
-    ```bash
+
+
+**Resource Name:** `Quarantine-SG`
+
+**CLI Command Brief**
+
+```bash
     aws ec2 create-security-group --group-name "Quarantine-SG" --description "Zero-traffic isolation SG" --vpc-id "vpc-xxxxxxxx"
-    ```
-  * **Configuration:** Remove all inbound and outbound default rules so all network traffic is dropped.
+```
+**Configuration:** Remove all inbound and outbound default rules so all network traffic is dropped.
 
 ---
 
 ### Step 2: Configure Amazon EventBridge Filter Pattern
 Deploy an EventBridge rule that evaluates incoming GuardDuty finding payloads in real-time and routes medium-to-high severity EC2 threats (`Severity >= 4.0`) to the Lambda function.
-* **Resource Name:** `GuardDuty-SOAR-Trigger`
-  * **Filter Criteria:** `detail-type`: `"GuardDuty Finding"`, `severity`: `>= 4.0`, `resourceType`: `"Instance"`
-  * **Target Finding Types:** `UnauthorizedAccess:EC2/SSHBruteForce`, `Trojan:EC2/BlackholeTraffic`, `Impact:EC2/DataExfiltration`
-  * **Source Reference File:** [`terraform/main.tf`](./terraform/main.tf)
+
+
+**Resource Name:** `GuardDuty-SOAR-Trigger`
+
+
+1. **Filter Criteria:** 
+
+
+   * `detail-type`:`"GuardDuty Finding"`, 
+   * `severity`: `>= 4.0`, 
+   * `resourceType`:`"Instance"`
+2. **Target Finding Types:** 
+* `UnauthorizedAccess:EC2/SSHBruteForce`, 
+* `Trojan:EC2/BlackholeTraffic`, 
+* `Impact:EC2/DataExfiltration`
+
+**Source Reference File:** [`terraform/main.tf`](./terraform/main.tf)
 
 ---
 
 ### Step 3: Deploy the AWS Lambda SOAR Handler
 Deploy the serverless remediation function written in Python 3.11 using Boto3.
-* **Resource Name:** `GuardDuty-SOAR-Remediator`
-  * **Core Remediation Steps:**
-      1. Extract `InstanceId` and `RemoteIpAddress` from the GuardDuty event payload.
-      2. Swap instance Security Groups with `ISOLATION_SG_ID` (`Quarantine-SG`).
-      3. Call `ec2.create_snapshot()` on all attached EBS volumes for forensic retention.
-      4. Append the attacker IP to `s3://your-threat-intel-bucket/blocked-ips.txt`.
-      5. Publish incident summary to Amazon SNS (`mini-soar-alerts`) and Slack.
-  * **Source Reference File:** [`src/lambda_function.py`](./src/lambda_function.py)
+
+
+**Resource Name:** `GuardDuty-SOAR-Remediator`
+
+**Core Remediation Steps:**
+
+
+1. Extract `InstanceId` and `RemoteIpAddress` from the GuardDuty event payload.
+2. Swap instance Security Groups with `ISOLATION_SG_ID` (`Quarantine-SG`).
+3. Call `ec2.create_snapshot()` on all attached EBS volumes for forensic retention.
+4. Append the attacker IP to `s3://your-threat-intel-bucket/blocked-ips.txt`.
+5. Publish incident summary to Amazon SNS (`mini-soar-alerts`) and Slack.
+   
+**Source Reference File:** [`src/lambda_function.py`](./src/lambda_function.py)
 
 ---
 
