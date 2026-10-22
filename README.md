@@ -11,9 +11,9 @@ In cloud operations, manual threat triage and containment can take hours, allowi
 This repository implements a serverless, event-driven mini-SOAR (Security Orchestration, Automation, and Response) pipeline on AWS. When Amazon GuardDuty detects suspicious activity on an EC2 workload (such as Trojan C&C communication, brute-force attempts, or data exfiltration), an Amazon EventBridge rule intercepts the finding within seconds. EventBridge triggers an AWS Lambda remediation engine that:
 
 1. **Network Containment -:** Isolates the compromised EC2 instance by attaching a zero-traffic `Quarantine-SG` security group and blocking the offender's IP in the Subnet Network ACL (NACL).
-2. **Forensic Evidence Preservation:** Automatically triggers an Amazon EBS Snapshot across all attached volumes for forensic analysis prior to host tampering.
-3. **Threat Intel Logging:** Logs the attacker IP into an encrypted Amazon S3 threat intelligence bucket (`blocked-ips.txt`).
-4. **Real-time Alerting:** Dispatches immediate alert payloads containing incident metadata and snapshot IDs to Amazon SNS and Slack.
+2. **Forensic Evidence Preservation -:** Automatically triggers an Amazon EBS Snapshot across all attached volumes for forensic analysis prior to host tampering.
+3. **Threat Intel Logging -:** Logs the attacker IP into an encrypted Amazon S3 threat intelligence bucket (`blocked-ips.txt`).
+4. **Real-time Alerting -:** Dispatches immediate alert payloads containing incident metadata and snapshot IDs to Amazon SNS and Slack.
 
 **Key Performance SLA:** Response and containment time is reduced from hours to under 2 minutes from initial detection.
 
